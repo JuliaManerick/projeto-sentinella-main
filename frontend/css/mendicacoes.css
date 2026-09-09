@@ -2,22 +2,22 @@ body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    background-color: #f1f4f8;
+    background-color: #f0fdfa;
 }
 
 .container {
     width: 90%;
     max-width: 700px;
     margin: 40px auto;
-    background-color: #dedcea;
+    background-color: #e6f4f1;
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(15, 118, 110, 0.08);
 }
 
 h2 {
     text-align: center;
-    color: #293c50;
+    color: #0f766e;
     margin-bottom: 20px;
 }
 
@@ -26,17 +26,14 @@ h2 {
 }
 
 .card {
-    background-color: #f9fbfc;
-    border: 1px solid #ddd;
+    background-color: #ffffff;
+    border: 1px solid #ccfbf1;
     padding: 12px;
     margin-top: 10px;
-    border-radius: 6px;
+    border-radius: 12px;
+    line-height: 1.5;
 }
 
 .card b {
-    color: #2c3e50;
-}
-
-.card {
-    line-height: 1.5;
+    color: #115e59;
 }
