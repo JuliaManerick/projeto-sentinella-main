@@ -5,33 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Recepção - Atendimento</title>
   <link rel="stylesheet" href="/css/atendimento.css">
-  <style>
-    .form-group { margin-bottom: 12px; }
-    .form-row { display: flex; gap: 10px; }
-    .form-row input, .form-row select { flex: 1; }
-    .menor-container {
-      display: none;
-      background-color: #fff3cd;
-      border: 1px solid #ffeeba;
-      padding: 10px;
-      border-radius: 4px;
-      margin-bottom: 12px;
-    }
-    #mensagem-status {
-      margin-top: 15px;
-      padding: 10px;
-      border-radius: 4px;
-      display: none;
-      font-weight: bold;
-      text-align: center;
-    }
-    .sucesso { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-    .erro { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-  </style>
+  <link rel="stylesheet" href="/theme.css">
+<link rel="stylesheet" href="/design.css">
 </head>
 <body>
+<button id="themeToggle" class="theme-toggle" onclick="alternarTema()" type="button">🌙</button>
+
 <div class="container">
-  <h2>Recepção - Novo Atendimento</h2>
+  <h2>Novo atendimento</h2>
 
   <!-- Nome Completo -->
   <div class="form-group">
@@ -41,7 +22,12 @@
   <!-- CPF e Data de Nascimento -->
   <div class="form-group form-row">
     <input id="cpf" placeholder="CPF (000.000.000-00)">
-    <input type="date" id="dataNascimento" onchange="calcularIdade()" title="Data de Nascimento">
+    <input
+      type="date"
+      id="dataNascimento"
+      onchange="calcularIdade()"
+      title="Data de Nascimento"
+    >
   </div>
 
   <!-- Sexo e Estado Civil -->
@@ -64,10 +50,16 @@
     </select>
   </div>
 
-  <!-- Alerta e Campo para Menores de Idade -->
+  <!-- Campo para menores de idade -->
   <div class="menor-container" id="campoResponsavel">
-    <label style="font-size: 12px; color: #856404; display: block; margin-bottom: 4px;">Paciente menor de idade:</label>
-    <input id="responsavel" placeholder="Nome do Responsável *">
+    <label style="font-size: 12px; color: #856404; display: block; margin-bottom: 4px;">
+      Paciente menor de idade:
+    </label>
+
+    <input
+      id="responsavel"
+      placeholder="Nome do Responsável *"
+    >
   </div>
 
   <!-- Tipo de Atendimento -->
@@ -79,118 +71,373 @@
     </select>
   </div>
 
-  <!-- Foto do Paciente -->
-  <div class="form-group">
-    <input type="file" id="foto">
-  </div>
+  <!-- Atendimento normal -->
+  <button id="btnCadastrar" onclick="cadastrar()">
+    Enviar para Triagem
+  </button>
 
-  <button id="btnCadastrar" onclick="cadastrar()">Enviar para Triagem</button>
+  <!-- Paciente em branco / emergência -->
+  <button
+    id="btnPacienteEmergencia"
+    onclick="cadastrarPacienteEmBranco()"
+  >
+    Paciente em Branco / Emergência
+  </button>
 
-  <!-- Mensagem de Retorno na Tela -->
+  <!-- Mensagem de retorno -->
   <div id="mensagem-status"></div>
 </div>
 
 <script>
+
 let idadeCalculada = null;
 
-// Calcula a idade dinamicamente
+
+// ======================================================
+// CALCULAR IDADE
+// ======================================================
+
 function calcularIdade() {
-  const dataNascInput = document.getElementById("dataNascimento").value;
-  const divResponsavel = document.getElementById("campoResponsavel");
+
+  const dataNascInput =
+    document.getElementById("dataNascimento").value;
+
+  const divResponsavel =
+    document.getElementById("campoResponsavel");
 
   if (!dataNascInput) {
+
     divResponsavel.style.display = "none";
+
     idadeCalculada = null;
+
     return;
   }
 
-  const dataNascimento = new Date(dataNascInput);
-  const hoje = new Date();
-  let idade = hoje.getFullYear() - dataNascimento.getFullYear();
-  const mes = hoje.getMonth() - dataNascimento.getMonth();
+  const dataNascimento =
+    new Date(dataNascInput);
 
-  if (mes < 0 || (mes === 0 && hoje.getDate() < dataNascimento.getDate())) {
+  const hoje =
+    new Date();
+  if (Number.isNaN(dataNascimento.getTime()) || dataNascimento > hoje) {
+    idadeCalculada = null;
+    document.getElementById("campoResponsavel").style.display = "none";
+    exibirMensagem("Informe uma data de nascimento válida, não futura.", "erro");
+    return;
+  }
+
+  let idade =
+    hoje.getFullYear() -
+    dataNascimento.getFullYear();
+
+  const mes =
+    hoje.getMonth() -
+    dataNascimento.getMonth();
+
+  if (
+    mes < 0 ||
+    (
+      mes === 0 &&
+      hoje.getDate() < dataNascimento.getDate()
+    )
+  ) {
     idade--;
   }
 
   idadeCalculada = idade;
 
-  // Exibe o campo do responsável para menores de 18 anos
+
+  // Menor de idade
   if (idade < 18) {
+
     divResponsavel.style.display = "block";
+
   } else {
+
     divResponsavel.style.display = "none";
+
     document.getElementById("responsavel").value = "";
   }
 }
 
+
+// ======================================================
+// MENSAGEM
+// ======================================================
+
 function exibirMensagem(texto, tipo) {
-  const divStatus = document.getElementById("mensagem-status");
+
+  const divStatus =
+    document.getElementById("mensagem-status");
+
   divStatus.textContent = texto;
+
   divStatus.className = tipo;
+
   divStatus.style.display = "block";
 }
 
+
+// ======================================================
+// CADASTRO NORMAL
+// ======================================================
+
 async function cadastrar() {
-  const nomeVal = document.getElementById("nome").value.trim();
-  const dataNascVal = document.getElementById("dataNascimento").value;
-  const responsavelVal = document.getElementById("responsavel").value.trim();
-  const btn = document.getElementById("btnCadastrar");
 
+  const nomeVal =
+    document.getElementById("nome").value.trim();
+
+  const dataNascVal =
+    document.getElementById("dataNascimento").value;
+
+  const responsavelVal =
+    document.getElementById("responsavel").value.trim();
+
+  const btn =
+    document.getElementById("btnCadastrar");
+
+
+  // Validação
   if (!nomeVal || !dataNascVal) {
-    exibirMensagem("Por favor, preencha o Nome e a Data de Nascimento.", "erro");
+
+    exibirMensagem(
+      "Por favor, preencha o Nome e a Data de Nascimento.",
+      "erro"
+    );
+
     return;
   }
 
-  if (idadeCalculada !== null && idadeCalculada < 18 && !responsavelVal) {
-    exibirMensagem("Pacientes menores de idade precisam do nome do responsável.", "erro");
+
+  if (new Date(dataNascVal) > new Date()) {
+    exibirMensagem("A data de nascimento não pode ser futura.", "erro");
     return;
   }
+
+  // Validação de menor de idade
+  if (
+    idadeCalculada !== null &&
+    idadeCalculada < 18 &&
+    !responsavelVal
+  ) {
+
+    exibirMensagem(
+      "Pacientes menores de idade precisam do nome do responsável.",
+      "erro"
+    );
+
+    return;
+  }
+
 
   btn.disabled = true;
-  exibirMensagem("Enviando dados...", "sucesso");
+
+  exibirMensagem(
+    "Enviando dados...",
+    "sucesso"
+  );
+
 
   const dadosPaciente = {
+
+    pacienteEmBranco: false,
+
     nome: nomeVal,
-    cpf: document.getElementById("cpf").value.trim(),
-    dataNascimento: dataNascVal,
-    idade: idadeCalculada,
-    sexo: document.getElementById("sexo").value,
-    estadoCivil: document.getElementById("estadoCivil").value,
-    responsavel: responsavelVal,
-    tipo: document.getElementById("tipo").value
+
+    cpf:
+      document.getElementById("cpf").value.trim(),
+
+    dataNascimento:
+      dataNascVal,
+
+    idade:
+      idadeCalculada,
+
+    sexo:
+      document.getElementById("sexo").value,
+
+    estadoCivil:
+      document.getElementById("estadoCivil").value,
+
+    responsavel:
+      responsavelVal,
+
+    tipo:
+      document.getElementById("tipo").value
   };
 
+
   try {
-    // Rota relativa para funcionar tanto localmente quanto no Render
-    const resposta = await fetch("/atendimento", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(dadosPaciente)
-    });
+
+    const resposta =
+      await fetch("/atendimento", {
+
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body:
+          JSON.stringify(dadosPaciente)
+      });
+
+
+    const resultado =
+      await resposta.json();
+
 
     if (resposta.ok) {
-      exibirMensagem("Paciente cadastrado com sucesso e enviado para a Triagem!", "sucesso");
 
-      // Limpa os campos
-      document.getElementById("nome").value = "";
-      document.getElementById("cpf").value = "";
-      document.getElementById("dataNascimento").value = "";
-      document.getElementById("sexo").value = "";
-      document.getElementById("estadoCivil").value = "";
-      document.getElementById("responsavel").value = "";
-      document.getElementById("campoResponsavel").style.display = "none";
-      document.getElementById("foto").value = "";
+      exibirMensagem(
+        "Paciente cadastrado com sucesso e enviado para a Triagem!",
+        "sucesso"
+      );
+
+
+      limparFormulario();
+
     } else {
-      exibirMensagem("Erro no servidor ao tentar cadastrar o paciente.", "erro");
+
+      exibirMensagem(
+        resultado.erro ||
+        "Erro no servidor ao tentar cadastrar o paciente.",
+        "erro"
+      );
     }
+
+
   } catch (erro) {
-    console.error("Erro na requisição:", erro);
-    exibirMensagem("Não foi possível conectar ao servidor.", "erro");
+
+    console.error(
+      "Erro na requisição:",
+      erro
+    );
+
+    exibirMensagem(
+      "Não foi possível conectar ao servidor.",
+      "erro"
+    );
+
   } finally {
+
     btn.disabled = false;
   }
 }
+
+
+// ======================================================
+// PACIENTE EM BRANCO / EMERGÊNCIA
+// ======================================================
+
+async function cadastrarPacienteEmBranco() {
+
+  const btnEmergencia =
+    document.getElementById(
+      "btnPacienteEmergencia"
+    );
+
+
+  btnEmergencia.disabled = true;
+
+
+  exibirMensagem(
+    "Criando paciente de emergência...",
+    "sucesso"
+  );
+
+
+  const dadosPaciente = {
+
+    pacienteEmBranco: true,
+
+    tipo: "SUS"
+  };
+
+
+  try {
+
+    const resposta =
+      await fetch("/atendimento", {
+
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body:
+          JSON.stringify(dadosPaciente)
+      });
+
+
+    const resultado =
+      await resposta.json();
+
+
+    if (resposta.ok) {
+
+      exibirMensagem(
+        `${resultado.nome} criado e enviado para a Triagem!`,
+        "sucesso"
+      );
+
+    } else {
+
+      exibirMensagem(
+        resultado.erro ||
+        "Erro ao criar paciente de emergência.",
+        "erro"
+      );
+    }
+
+
+  } catch (erro) {
+
+    console.error(
+      "Erro na requisição:",
+      erro
+    );
+
+    exibirMensagem(
+      "Não foi possível conectar ao servidor.",
+      "erro"
+    );
+
+  } finally {
+
+    btnEmergencia.disabled = false;
+  }
+}
+
+
+// ======================================================
+// LIMPAR FORMULÁRIO
+// ======================================================
+
+function limparFormulario() {
+
+  document.getElementById("nome").value = "";
+
+  document.getElementById("cpf").value = "";
+
+  document.getElementById("dataNascimento").value = "";
+
+  document.getElementById("sexo").value = "";
+
+  document.getElementById("estadoCivil").value = "";
+
+  document.getElementById("responsavel").value = "";
+
+  document.getElementById("campoResponsavel").style.display = "none";
+
+  idadeCalculada = null;
+}
+
 </script>
+
+<script src="/js/theme.js"></script>
+<script src="/js/session.js"></script>
+<script src="/js/ui.js"></script>
 </body>
 </html>

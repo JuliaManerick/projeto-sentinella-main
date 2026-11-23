@@ -4,15 +4,10 @@
   <meta charset="UTF-8">
   <title>Mídia Indoor - TV</title>
   <style>
-    * { 
-      box-sizing: border-box; 
-      margin: 0; 
-      padding: 0; 
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
 
     body {
-      background-color: #f0fdfa;
+      background-color: #5c4033;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -24,64 +19,55 @@
       display: flex;
       width: 95vw;
       height: 90vh;
-      gap: 20px;
+      gap: 18px;
     }
 
     .left-panel {
       display: flex;
       flex-direction: column;
       width: 35%;
-      gap: 20px;
+      gap: 18px;
     }
 
     .right-panel {
       display: flex;
       flex-direction: column;
       width: 65%;
-      gap: 20px;
+      gap: 18px;
     }
 
     .box {
-      background-color: #ffffff;
-      border: 2px solid #ccfbf1;
-      border-radius: 20px;
-      padding: 24px;
+      background-color: #63d4f4;
+      border: 6px solid #b39b82;
+      border-radius: 15px;
+      padding: 20px;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
-      box-shadow: 0 8px 25px rgba(15, 118, 110, 0.08);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     }
 
     .box-title {
-      color: #0f766e;
-      font-size: 2vw;
-      font-weight: 700;
+      color: #ffffff;
+      font-size: 2.2vw;
+      font-weight: bold;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
       margin-bottom: 12px;
-      border-bottom: 2px solid #ccfbf1;
-      padding-bottom: 6px;
-      width: 100%;
     }
 
     /* Painel esquerdo - local (guichê ou consultório) */
-    .local-box { 
-      flex: 1; 
-      background: linear-gradient(135deg, #ffffff 0%, #f0fdfa 100%);
-    }
-
+    .local-box { flex: 1; }
     .local-number {
-      color: #0d9488;
-      font-size: 9.5vw;
-      font-weight: 800;
+      color: #d12c2c;
+      font-size: 9vw;
+      font-weight: bold;
       line-height: 1;
-      margin-top: 5px;
     }
-
     .local-type {
-      color: #52525b;
+      color: #555;
       font-size: 1.8vw;
       font-weight: bold;
       margin-top: 6px;
@@ -93,84 +79,52 @@
       justify-content: flex-start;
       align-items: flex-start;
     }
-
-    .history-box .box-title { 
-      font-size: 1.6vw; 
-      text-align: center;
-    }
-
+    .history-box .box-title { font-size: 1.8vw; align-self: center; }
     #history-list {
       list-style: none;
       width: 100%;
-      color: #134e4a;
-      font-size: 1.4vw;
-      font-weight: 600;
+      color: #d12c2c;
+      font-size: 1.5vw;
+      font-weight: bold;
       text-align: left;
     }
-
     #history-list li {
-      margin-bottom: 10px;
-      border-bottom: 1px solid #f0fdfa;
-      padding-bottom: 8px;
-      display: flex;
-      align-items: center;
-    }
-
-    #history-list li::before {
-      content: "•";
-      color: #0d9488;
-      font-size: 1.8vw;
-      margin-right: 10px;
+      margin-bottom: 8px;
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+      padding-bottom: 5px;
     }
 
     /* Painel direito - nome do paciente */
-    .patient-box { 
-      flex: 3; 
-      background: linear-gradient(135deg, #ffffff 0%, #f0fdfa 100%);
-    }
-
+    .patient-box { flex: 3; }
     .patient-name {
-      color: #0f766e;
-      font-size: 6vw;
-      font-weight: 800;
+      color: #d12c2c;
+      font-size: 6.5vw;
+      font-weight: bold;
       line-height: 1.2;
       word-break: break-word;
-      margin-top: 10px;
     }
 
     /* Logo */
-    .logo-box { 
-      flex: 1; 
-      background-color: #0d9488;
-      border-color: #0f766e;
-    }
-
+    .logo-box { flex: 1; }
     .logo-text {
-      color: #ffffff;
-      font-size: 3.2vw;
-      font-weight: 700;
+      color: #8c3b7a;
+      font-size: 3.5vw;
+      font-weight: bold;
       text-transform: uppercase;
-      letter-spacing: 1px;
     }
 
     /* Animação de flash quando chama */
     @keyframes flash {
-      0%, 100% { 
-        background-color: #ffffff; 
-        transform: scale(1);
-      }
-      50% { 
-        background-color: #ccfbf1; 
-        transform: scale(1.02);
-      }
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
     }
-
-    .flash { 
-      animation: flash 0.6s ease-in-out 3; 
-    }
+    .flash { animation: flash 0.5s ease 3; }
   </style>
+  <link rel="stylesheet" href="/theme.css">
+<link rel="stylesheet" href="/design.css">
 </head>
-<body>
+<body class="tv-screen">
+
 
 <!-- Estrutura da tela da TV criada para exibir o local e o nome do paciente chamado -->
 <div class="tv-container">
@@ -190,13 +144,14 @@
       <div class="patient-name" id="patient-name">AGUARDANDO...</div>
     </div>
     <div class="box logo-box">
-      <div class="logo-text">🏥 Sistema Hospitalar</div>
+      <div class="logo-text">HOSPITAL SENTINELA</div>
     </div>
   </div>
 </div>
 
 <script>
 let ultimoId = null;
+window.sentinelaTVHasCall = false;
 
 // Função criada para buscar a chamada atual e o histórico da TV em tempo real.
 function atualizar() {
@@ -206,6 +161,7 @@ function atualizar() {
       const chamada = data.chamada;
       const historico = data.historico || [];
 
+      window.sentinelaTVHasCall = Boolean(chamada);
       if (chamada) {
         document.getElementById("local-tipo").innerText = chamada.localTipo || "GUICHÊ";
         document.getElementById("local-numero").innerText = chamada.localNumero || "--";
@@ -239,5 +195,11 @@ atualizar();
 setInterval(atualizar, 2000);
 </script>
 
-</body>
+
+<div id="conteudoMultimidia" style="display:none;position:fixed;inset:0;background:#0b1220;color:white;z-index:5;align-items:center;justify-content:center;text-align:center;padding:40px"><div><div style="font-size:60px">🏥</div><h1 id="conteudoTitulo"></h1><p id="conteudoTexto" style="font-size:28px;max-width:900px"></p></div></div>
+<script>
+let conteudosTV=[];let indiceTV=0;async function carregarConteudosTV(){try{conteudosTV=await fetch('/tv/conteudo').then(r=>r.json());}catch(e){}}
+function mostrarConteudoTV(){if(!conteudosTV.length)return;const box=document.getElementById('conteudoMultimidia');document.getElementById('conteudoTitulo').textContent=conteudosTV[indiceTV].titulo;document.getElementById('conteudoTexto').textContent=conteudosTV[indiceTV].texto;box.style.display='flex';indiceTV=(indiceTV+1)%conteudosTV.length;setTimeout(()=>box.style.display='none',6500)}
+carregarConteudosTV();setInterval(()=>{if(!window.sentinelaTVHasCall)mostrarConteudoTV()},9000);
+</script></body>
 </html>
